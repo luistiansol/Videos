@@ -3,37 +3,107 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Watch Ultra Player</title>
+<title>Watch Browser Ultra</title>
 
 <style>
 body {
     margin: 0;
     background: black;
     overflow: hidden;
+    font-family: sans-serif;
 }
 
-.container {
+/* Pantalla circular */
+.app {
     width: 100vw;
     height: 100vh;
     border-radius: 50%;
     overflow: hidden;
+    position: relative;
 }
+
+/* Barra superior */
+.topbar {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 30px;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    z-index: 10;
+}
+
+/* Botones */
+.btn {
+    font-size: 10px;
+    color: white;
+    background: #111;
+    padding: 4px 6px;
+    border-radius: 6px;
+}
+
+/* Navegador */
 iframe {
     width: 100%;
     height: 100%;
     border: none;
+    transform: scale(0.9); /* zoom out para ver mejor en reloj */
+    transform-origin: center;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-    <iframe 
-        src="https://www.xvideos.com/embedframe/VIDEO_ID"
-        allowfullscreen>
-    </iframe>
+<div class="app">
+
+    <div class="topbar">
+        <div class="btn" onclick="goHome()">🏠</div>
+        <div class="btn" onclick="zoomIn()">＋</div>
+        <div class="btn" onclick="zoomOut()">－</div>
+    </div>
+
+    <iframe id="browser" src="https://www.xvideos.com"></iframe>
+
 </div>
+
+<script>
+let zoom = 0.9;
+const frame = document.getElementById("browser");
+
+function zoomIn() {
+    zoom += 0.1;
+    frame.style.transform = "scale(" + zoom + ")";
+}
+
+function zoomOut() {
+    zoom -= 0.1;
+    frame.style.transform = "scale(" + zoom + ")";
+}
+
+function goHome() {
+    frame.src = "https://www.xvideos.com";
+}
+
+// Swipe navegación (modo smartwatch real)
+let startX = 0;
+
+document.addEventListener("touchstart", e => {
+    startX = e.touches[0].clientX;
+});
+
+document.addEventListener("touchend", e => {
+    let endX = e.changedTouches[0].clientX;
+
+    if (startX - endX > 50) {
+        frame.contentWindow.history.forward();
+    } else if (endX - startX > 50) {
+        frame.contentWindow.history.back();
+    }
+});
+</script>
 
 </body>
 </html>
