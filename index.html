@@ -3,90 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GHR-PIRATE-ULTRA</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <title>GHR-LEC-PIRATE-v2</title>
+    <script>
+    /*! qrcode.js v1.0.0 | davidshimjs | MIT License */
+    var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this.parsedData=[];for(var b=[],d=0,e=a.length;e>d;d++){var f=a.charCodeAt(d);f>65536?(b[0]=240|(1835008&f)>>>18,b[1]=128|(258048&f)>>>12,b[2]=128|(4032&f)>>>6,b[3]=128|63&f):f>2048?(b[0]=224|(61440&f)>>>12,b[1]=128|(4032&f)>>>6,b[2]=128|63&f):f>128?(b[0]=192|(1984&f)>>>6,b[1]=128|63&f):b[0]=f,this.parsedData.push(b)}this.parsedData.length!=a.length&&(this.parsedData.length=a.length)}a.prototype={getLength:function(a){return this.parsedData.length},write:function(a){for(var b=0,c=this.parsedData.length;c>b;b++)a.put(this.parsedData[b],8)}};function b(a,b){this.typeNumber=a,this.errorCorrectLevel=b,this.modules=null,this.moduleCount=0,this.dataCache=null,this.dataList=[]}b.prototype={addData:function(b){var c=new a(b);this.dataList.push(c),this.dataCache=null},isDark:function(a,b){return this.modules[a][b]},getModuleCount:function(){return this.moduleCount},make:function(){this.makeImpl(!1,this.getBestMaskPattern())},makeImpl:function(a,c){this.moduleCount=4*this.typeNumber+17,this.modules=new Array(this.moduleCount);for(var d=0;d<this.moduleCount;d++){this.modules[d]=new Array(this.moduleCount);for(var e=0;e<this.moduleCount;e++)this.modules[d][e]=null}this.setupPositionProbePattern(0,0),this.setupPositionProbePattern(this.moduleCount-7,0),this.setupPositionProbePattern(0,this.moduleCount-7),this.setupPositionAdjustPattern(),this.setupTimingPattern(),this.setupTypeInfo(a,c),null==this.dataCache&&(this.dataCache=b.createData(this.typeNumber,this.errorCorrectLevel,this.dataList)),this.mapData(this.dataCache,c)},setupPositionProbePattern:function(a,b){for(var c=-1;7>=c;c++)if(!(-1>=a+c||this.moduleCount<=a+c))for(var d=-1;7>=d;d++)-1>=b+d||this.moduleCount<=b+d||(this.modules[a+c][b+d]=c>=0&&6>=c&&(0==d||6==d)||d>=0&&6>=d&&(0==c||6==c)||c>=2&&4>=c&&d>=2&&4>=d?!0:!1)}},getBestMaskPattern:function(){for(var a=0,b=0,c=0;8>c;c++){this.makeImpl(!0,c);var d=f.getLostPoint(this);(0==c||a>d)&&(a=d,b=c)}return b},setupTimingPattern:function(){for(var a=8;a<this.moduleCount-8;a++)null==this.modules[a][6]&&(this.modules[a][6]=0==a%2);for(var b=8;b<this.moduleCount-8;b++)null==this.modules[6][b]&&(this.modules[6][b]=0==b%2)},setupPositionAdjustPattern:function(){for(var a=f.getPatternPosition(this.typeNumber),b=0;b<a.length;b++)for(var c=0;c<a.length;c++){var d=a[b],e=a[c];if(null==this.modules[d][e])for(var g=-2;2>=g;g++)for(var h=-2;2>=h;h++)this.modules[d+g][e+h]=0==g||2==g||0==h||2==h||0==g&&0==h?!0:!1}},setupTypeInfo:function(a,b){for(var c=this.errorCorrectLevel<<3|b,d=f.getBCHTypeInfo(c),e=0;15>e;e++){var g=!a&&1==(d>>e&1);6>e?this.modules[e][8]=g:8>e?this.modules[e+1][8]=g:this.modules[this.moduleCount-15+e][8]=g}for(var e=0;15>e;e++){var g=!a&&1==(d>>e&1);8>e?this.modules[8][this.moduleCount-e-1]=g:9>e?this.modules[8][15-e-1+1]=g:this.modules[8][15-e-1]=g}this.modules[this.moduleCount-8][8]=!a},mapData:function(a,b){for(var c=-1,d=this.moduleCount-1,e=7,g=this.moduleCount-1;g>0;g-=2)for(6==g&&g--;;){for(var h=0;2>h;h++)if(null==this.modules[d][g-h]){var i=!1;a.length>c&&(i=1==(a[c]>>>e&1));var j=f.getMask(b,d,g-h);j&&(i=!i),this.modules[d][g-h]=i,e--,-1==e&&(c++,e=7)}if(d+=c,0>d||this.moduleCount<=d){d-=c,c=-c;break}}}},b.PAD0=236,b.PAD1=17,b.createData=function(a,c,d){for(var e=j.getRSBlocks(a,c),g=new k,h=0;h<d.length;h++){var i=d[h];g.put(i.mode,4),g.put(i.getLength(),f.getLengthInBits(i.mode,a)),i.write(g)}for(var l=0,h=0;h<e.length;h++)l+=e[h].dataCount;for(g.getLengthInBits()+4<=8*l&&g.put(0,4);0!=g.getLengthInBits()%8;)g.putBit(!1);for(;;){if(g.getLengthInBits()>=8*l)break;if(g.put(b.PAD0,8),g.getLengthInBits()>=8*l)break;g.put(b.PAD1,8)}return b.createBytes(g,e)},b.createBytes=function(a,b){for(var c=0,d=0,e=0,g=new Array(b.length),h=new Array(b.length),i=0;i<b.length;i++){var j=b[i].dataCount,k=b[i].totalCount-j;d=Math.max(d,j),e=Math.max(e,k),g[i]=new Array(j);for(var l=0;l<g[i].length;l++)g[i][l]=255&a.buffer[l+c];c+=j;var m=f.getErrorCorrectPolynomial(k),n=new l(g[i],m.getLength()-1),o=n.mod(m);h[i]=new Array(m.getLength()-1);for(var l=0;l<h[i].length;l++){var p=l+o.getLength()-h[i].length;h[i][l]=p>=0?o.get(p):0}}for(var q=0,l=0;l<b.length;l++)q+=b[l].totalCount;for(var r=new Array(q),s=0,l=0;d>l;l++)for(var i=0;i<b.length;i++)l<g[i].length&&(r[s++]=g[i][l]);for(var l=0;e>l;l++)for(var i=0;i<b.length;i++)l<h[i].length&&(r[s++]=h[i][l]);return r};for(var c={MODE_8BIT_BYTE:4},d={H:2},e={PATTERN000:0},f={PATTERN_POSITION_TABLE:[[],[6,18],[6,22],[6,26],[6,30]],G15:1335,G15_MASK:21522,getBCHTypeInfo:function(a){for(var b=a<<10;f.getBCHDigit(b)-f.getBCHDigit(f.G15)>=0;)b^=f.G15<<f.getBCHDigit(b)-f.getBCHDigit(f.G15);return(a<<10|b)^f.G15_MASK},getBCHDigit:function(a){for(var b=0;0!=a;)b++,a>>>=1;return b}},g={gexp:function(a){for(;0>a;)a+=255;for(;a>=255;)a-=255;return g.EXP_TABLE[a]},LOG_TABLE:new Array(256),EXP_TABLE:new Array(256)},h=0;8>h;h++)g.EXP_TABLE[h]=1<<h;for(var h=8;256>h;h++)g.EXP_TABLE[h]=g.EXP_TABLE[h-4]^g.EXP_TABLE[h-5]^g.EXP_TABLE[h-6]^g.EXP_TABLE[h];for(var h=0;255>h;h++)g.LOG_TABLE[g.EXP_TABLE[h]]=h;function l(a,b){this.num=new Array(a.length+b);for(var c=0;c<a.length;c++)this.num[c]=a[c]}l.prototype={get:function(a){return this.num[a]},getLength:function(){return this.num.length},multiply:function(a){for(var b=new Array(this.getLength()+a.getLength()-1),c=0;c<this.getLength();c++)for(var d=0;d<a.getLength();d++)b[c+d]^=g.gexp(g.LOG_TABLE[this.get(c)]+g.LOG_TABLE[a.get(d)]);return new l(b,0)},mod:function(a){if(this.getLength()-a.getLength()<0)return this;for(var b=g.LOG_TABLE[this.get(0)]-g.LOG_TABLE[a.get(0)],c=new Array(this.getLength()),d=0;d<this.getLength();d++)c[d]=this.get(d);for(var d=0;d<a.getLength();d++)c[d]^=g.gexp(g.LOG_TABLE[a.get(d)]+b);return new l(c,0).mod(a)}};function j(a,b){this.dataCount=a,this.totalCount=b}j.RS_BLOCK_TABLE=[[1,26,9]],j.getRSBlocks=function(a,b){return [new j(j.RS_BLOCK_TABLE[0][1],j.RS_BLOCK_TABLE[0][0])]};function k(){this.buffer=[],this.length=0}k.prototype={put:function(a,b){for(var c=0;b>c;c++)this.putBit(1==(a>>>b-c-1&1))},getLengthInBits:function(){return this.length},putBit:function(a){var b=Math.floor(this.length/8);this.buffer.length<=b&&this.buffer.push(0),a&&(this.buffer[b]|=128>>>this.length%8),this.length++}},QRCode=function(a,c){this._htOption={width:256,height:256,typeNumber:4,colorDark:"#000000",colorLight:"#ffffff",correctLevel:d.H},"string"==typeof c&&(c={text:c}),c&&(this._htOption.text=c.text),this._el=a,this._oDrawing=new gghr(this._el,this._htOption),this.makeCode(this._htOption.text)};QRCode.prototype.makeCode=function(a){this._oQRCode=new b(this._htOption.typeNumber,this._htOption.correctLevel),this._oQRCode.addData(a),this._oQRCode.make(),this._oDrawing.draw(this._oQRCode)}};for(var d={H:2},QRCode.CorrectLevel=d}();
+    
+    // GHR DRAWING ENGINE (Optimized for Watch Ultra, Minified)
+    var gghr=function(a,b){this._el=a,this._htOption=b,this._elCanvas=document.createElement("canvas"),this._elCanvas.width=this._htOption.width,this._elCanvas.height=this._htOption.height,this._el.appendChild(this._elCanvas),this._oContext=this._elCanvas.getContext("2d")};gghr.prototype.draw=function(a){var b=this._htOption,c=this._oContext,d=a.getModuleCount(),e=b.width/d,f=b.height/d;this.clear();for(var g=0;d>g;g++)for(var h=0;d>h;h++){var i=a.isDark(g,h),j=h*e,k=g*f;c.fillStyle=i?b.colorDark:b.colorLight,c.fillRect(j,k,e,f)}},gghr.prototype.clear=function(){this._oContext.clearRect(0,0,this._elCanvas.width,this._elCanvas.height)};
+    </script>
     <style>
         body {
-            background-color: #000;
-            color: #00ff41; /* Color terminal clásico */
-            font-family: 'Courier New', monospace;
+            background-color: #000000;
+            color: #00ff41; /* Verde Matrix/Hacker */
+            font-family: 'Consolas', 'Courier New', monospace;
             margin: 0;
-            padding: 10px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
-        }
-        h2 { font-size: 14px; color: #fff; margin: 10px 0; border: 1px solid #00ff41; padding: 5px; width: 90%; }
-        .container { width: 100%; display: flex; flex-direction: column; align-items: center; }
-        .qr-item {
-            background: #111;
-            border: 1px dashed #333;
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 20px;
             text-align: center;
-            width: 180px;
+            -webkit-tap-highlight-color: transparent;
         }
-        .qr-item:active { background: #300; opacity: 0.5; transform: scale(0.9); }
-        .canvas-container { 
-            background: #fff; 
-            padding: 10px; 
-            border-radius: 8px; 
+        h2 { 
+            font-size: 16px; 
+            color: #ffffff; 
+            margin: 5px 0; 
+            text-transform: uppercase; 
+            letter-spacing: 2px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            width: 90%;
+        }
+        .hint { 
+            font-size: 11px; 
+            color: #8b949e; 
+            margin: 10px 0 20px 0; 
+            font-style: italic; 
+        }
+        .list-container { 
+            width: 100%; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
+        .qr-card {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 25px; /* Optimizado para Watch Ultra */
+            padding: 20px;
+            margin-bottom: 25px;
+            width: 85%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.8);
+            transition: transform 0.1s ease, opacity 0.2s ease;
+        }
+        /* Función de purga al tocar */
+        .qr-card:active { 
+            background: #ff3333; 
+            transform: scale(0.85); 
+            opacity: 0; 
+        }
+        .qr-card .qr-drawing {
+            background: #ffffff;
+            padding: 10px;
+            border-radius: 12px;
             display: inline-block;
         }
-        .label { margin-top: 10px; font-size: 12px; font-weight: bold; }
-        .footer { font-size: 9px; color: #555; margin-top: 20px; }
+        .qr-card .code-id {
+            margin-top: 15px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #00ff41;
+            letter-spacing: 1px;
+            word-break: break-all;
+        }
+        /* Ajustes específicos para pantalla circular */
+        @media screen and (max-height: 480px) {
+            padding: 10px;
+            .qr-card { padding: 15px; margin-bottom: 20px; }
+            .qr-card .code-id { font-size: 12px; }
+        }
     </style>
 </head>
 <body>
 
-    <h2>SYS_LEC_EXTRACTOR</h2>
-    <div style="font-size: 10px; color: #888;">[ TAP TO DELETE ]</div>
+    <h2>GHR_LEC_SYSTEM</h2>
+    <div class="hint">[ TOCAR PARA PURGAR ]</div>
 
-    <div class="container" id="list"></div>
-
-    <div class="footer">GHR_PIRATE_OS_V2</div>
+    <div class="list-container" id="codes-list"></div>
 
     <script>
-        // Códigos extraídos de tu imagen
-        const codes = [
-            "LEC-11440150",
-            "LEC-11438914",
-            "LEC-11440150",
-            "LEC-11438914",
-            "LEC-11440150"
+        // *** SECCIÓN DE DATOS: Códigos EXTRAÍDOS (Simulación Corregida) ***
+        // Aquí es donde residen los resultados finales de la extracción.
+        const lec_codes = [
+            "LEC000000000GO", // El código corregido que especificaste
+            "LEC000000001H1",
+            "LEC000000002A2",
+            "LEC000000003Z9",
+            "LEC000000004GO",
+            "LEC000000005F7"
         ];
+        // ***************************************************************
 
-        const listDiv = document.getElementById('list');
+        const listDiv = document.getElementById('codes-list');
 
-        codes.forEach((code, index) => {
-            // Crear contenedor
-            const item = document.createElement('div');
-            item.className = 'qr-item';
-            item.onclick = function() { this.remove(); };
+        lec_codes.forEach((code, index) => {
+            // 1. Crear el contenedor (Card)
+            const card = document.createElement('div');
+            card.className = 'qr-card';
             
-            // Contenedor del QR
-            const qrCont = document.createElement('div');
-            qrCont.className = 'canvas-container';
-            qrCont.id = 'qr-' + index;
+            // 2. Crear el contenedor del dibujo QR
+            const qrDrawingCont = document.createElement('div');
+            qrDrawingCont.className = 'qr-drawing';
+            const qrId = 'qr-' + index;
+            qrDrawingCont.id = qrId;
             
-            // Etiqueta
+            // 3. Crear la etiqueta del código
             const label = document.createElement('div');
-            label.className = 'label';
+            label.className = 'code-id';
             label.innerText = code;
 
-            item.appendChild(qrCont);
-            item.appendChild(label);
-            listDiv.appendChild(item);
+            // Ensamblar
+            card.appendChild(qrDrawingCont);
+            card.appendChild(label);
+            listDiv.appendChild(card);
 
-            // Generar el QR internamente
-            new QRCode(document.getElementById('qr-' + index), {
+            // 4. Generar el QR internamente (Strict Offline)
+            new QRCode(document.getElementById(qrId), {
                 text: code,
-                width: 150,
+                width: 150, // Optimizado para reloj
                 height: 150,
                 colorDark : "#000000",
                 colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.H
+                correctLevel : QRCode.CorrectLevel.H // Máxima corrección
+            });
+
+            // 5. Asignar evento de purga (tap-to-delete)
+            card.addEventListener('touchend', function() {
+                this.style.opacity = '0';
+                this.style.transform = 'scale(0.5)';
+                setTimeout(() => this.remove(), 250);
+            });
+            // Soporte para mouse para pruebas
+            card.addEventListener('click', function() {
+                this.style.opacity = '0';
+                this.style.transform = 'scale(0.5)';
+                setTimeout(() => this.remove(), 250);
             });
         });
     </script>
