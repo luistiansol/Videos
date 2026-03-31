@@ -3,44 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LEC-GHR-PIRATE</title>
+    <title>GHR-PIRATE-ULTRA</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         body {
-            background-color: #010409; /* Negro GitHub Dark */
-            color: #39ff14; /* Verde Neón */
-            font-family: 'Consolas', 'Courier New', monospace;
-            text-align: center;
+            background-color: #000;
+            color: #00ff41; /* Color terminal clásico */
+            font-family: 'Courier New', monospace;
             margin: 0;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h2 { font-size: 14px; color: #fff; margin: 10px 0; border: 1px solid #00ff41; padding: 5px; width: 90%; }
+        .container { width: 100%; display: flex; flex-direction: column; align-items: center; }
+        .qr-item {
+            background: #111;
+            border: 1px dashed #333;
+            border-radius: 15px;
             padding: 15px;
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
+            margin-bottom: 20px;
+            text-align: center;
+            width: 180px;
         }
-        h2 { 
-            font-size: 16px; 
-            margin: 5px 0; 
-            color: #ffffff; 
-            text-transform: uppercase; 
-            letter-spacing: 2px;
-            border-bottom: 1px solid #30363d;
-            padding-bottom: 10px;
+        .qr-item:active { background: #300; opacity: 0.5; transform: scale(0.9); }
+        .canvas-container { 
+            background: #fff; 
+            padding: 10px; 
+            border-radius: 8px; 
+            display: inline-block;
         }
-        .hint { 
-            font-size: 10px; 
-            color: #8b949e; 
-            margin: 10px 0 20px 0;
-            font-style: italic;
-        }
-        .qr-card {
-            background: #0d1117;
-            border: 1px solid #30363d;
-            border-radius: 20px; /* Bordes redondeados para el Watch Ultra */
-            padding: 20px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
-            transition: transform 0.1s ease;
-        }
-        /* Efecto de eliminación visual */
-        .qr-card:active { 
-            background: #ff3333; 
-            transform: scale(0.8);
-            opacity: 0
+        .label { margin-top: 10px; font-size: 12px; font-weight: bold; }
+        .footer { font-size: 9px; color: #555; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <h2>SYS_LEC_EXTRACTOR</h2>
+    <div style="font-size: 10px; color: #888;">[ TAP TO DELETE ]</div>
+
+    <div class="container" id="list"></div>
+
+    <div class="footer">GHR_PIRATE_OS_V2</div>
+
+    <script>
+        // Códigos extraídos de tu imagen
+        const codes = [
+            "LEC-11440150",
+            "LEC-11438914",
+            "LEC-11440150",
+            "LEC-11438914",
+            "LEC-11440150"
+        ];
+
+        const listDiv = document.getElementById('list');
+
+        codes.forEach((code, index) => {
+            // Crear contenedor
+            const item = document.createElement('div');
+            item.className = 'qr-item';
+            item.onclick = function() { this.remove(); };
+            
+            // Contenedor del QR
+            const qrCont = document.createElement('div');
+            qrCont.className = 'canvas-container';
+            qrCont.id = 'qr-' + index;
+            
+            // Etiqueta
+            const label = document.createElement('div');
+            label.className = 'label';
+            label.innerText = code;
+
+            item.appendChild(qrCont);
+            item.appendChild(label);
+            listDiv.appendChild(item);
+
+            // Generar el QR internamente
+            new QRCode(document.getElementById('qr-' + index), {
+                text: code,
+                width: 150,
+                height: 150,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        });
+    </script>
+</body>
+</html>
