@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KN Picker - Cycle Counts</title>
+    <title>KN Picker - QR Cycle Counts</title>
     <style>
         :root {
             --bg: #000; --card: #1c1c1e; --text: #fff; --accent: #0a84ff;
@@ -19,38 +19,31 @@
         .progress-container { width: 100%; height: 6px; background: #333; border-radius: 3px; overflow: hidden; }
         #progress-bar { width: 0%; height: 100%; background: var(--success); transition: 0.4s; }
         
-        /* LISTA ESPECIAL PARA CYCLE COUNTS */
-        .list-container { padding: 10px 5px; display: flex; flex-direction: column; gap: 8px; }
+        /* LISTA CON QR */
+        .list-container { padding: 10px 5px; display: flex; flex-direction: column; gap: 10px; }
         
         .pallet-card { 
-            background: var(--card); border: 1px solid #333; border-radius: 12px; 
-            padding: 10px; text-align: center; 
+            background: var(--card); border: 1px solid #333; border-radius: 15px; 
+            padding: 15px; text-align: center; 
             display: flex; flex-direction: column; align-items: center;
         }
         .pallet-card:active { background: #333; transform: scale(0.98); }
 
-        /* Referencia pequeña de Location */
-        .small-loc { font-size: 0.8rem; color: var(--warning); margin-bottom: 5px; opacity: 0.7; }
+        .small-loc { font-size: 1rem; font-weight: bold; color: var(--warning); margin-bottom: 8px; }
         
-        /* Contenedor del Código de Barras */
-        .barcode-container {
-            background: #fff; /* Fondo blanco para contraste de escaneo */
-            padding: 5px;
-            border-radius: 4px;
-            width: 90%; /* Ocupa el ancho para el reloj */
-            height: 50px; /* Altura para el escáner */
-            overflow: hidden;
-            margin-bottom: 5px;
+        /* Contenedor del QR */
+        .qr-box {
+            background: #fff; 
+            padding: 10px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 8px;
         }
-        
-        /* Estilo para las barras individuales (dibujadas por JS) */
-        .barcode-bar {
-            float: left;
-            height: 100%;
-            background: #000;
-        }
+        .qr-box img { width: 150px; height: 150px; } /* Tamaño optimizado para escaneo */
 
-        .lpn-text { font-size: 0.8rem; opacity: 0.6; font-family: monospace; }
+        .lpn-text { font-size: 0.9rem; opacity: 0.6; font-family: monospace; font-weight: bold; }
         
         /* BOTÓN REPORTE NAVY */
         .footer-btn { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 90%; z-index: 200; }
@@ -77,7 +70,7 @@
     <canvas id="reportCanvas" style="display:none;"></canvas>
 
     <script>
-        // DATOS PROCESADOS
+        // DATOS DE LA HOJA (19 PALLETS)
         const masterList = [
             { lpn: "LEC00000001ES0", loc: "AY48B002" }, { lpn: "LEC0000000SC2", loc: "AZ50A003" },
             { lpn: "LEC0000000SCE", loc: "AZ50B002" }, { lpn: "LEC0000000SCA", loc: "AZ50B003" },
@@ -102,42 +95,7 @@
         const downloadBtn = document.getElementById('download-btn');
         const progressBar = document.getElementById('progress-bar');
 
-        // LÓGICA DE DIBUJO DE CÓDIGO DE BARRAS (Puro JS, optimizado para Watch)
-        function generateBarcodeHtml(data) {
-            const code39Mapi = {
-                '0':'1010011011010','1':'1101001010110','2':'1011001010110','3':'1101100101010','4':'1010011010110','5':'1101001101010','6':'1011001101010','7':'1010010110110','8':'1101001011010','9':'1011001011010',
-                'A':'1101010010110','B':'1011010010110','C':'1101101001010','D':'1010110010110','E':'1101011001010','F':'1011011001010','G':'1010100110110','H':'1101010011010','I':'1011010011010','J':'1010110011010',
-                'K':'1101010100110','L':'1011010100110','C':'1101101010010','M':'1101101010010','N':'1010110100110','O':'1101011010010','P':'1011011010010','Q':'1010101100110','R':'1101010110010','S':'1011010110010','T':'1010110110010',
-                'U':'1100101010110','V':'1001101010110','W':'1100110101010','X':'1001011010110','Y':'1100101101010','Z':'1001101101010','-':'1001010110110','.':'1100101011010',' ':'1001101011010','*':'1001011011010','$':'1001001001010','/':'1001001010010','+':'1001010010010','%':'1010010010010'
-            };
-            const asterisco = '1001011011010'; // Start/Stop
-            let result = asterisco + '0'; // '0' es espacio entre caracteres
-            
-            const upperData = data.toUpperCase();
-            for (let i = 0; i < upperData.length; i++) {
-                const char = upperData[i];
-                if (code39Mapi[char]) {
-                    result += code39Mapi[char] + '0';
-                }
-            }
-            result += asterisco;
-
-            let html = '<div class="barcode-container">';
-            // Ancho de barra base: para el reloj, 1.2px está bien.
-            const barWidth = 1.2; 
-            for (let i = 0; i < result.length; i++) {
-                if (result[i] === '1') {
-                    html += `<div class="barcode-bar" style="width:${barWidth}px;"></div>`;
-                } else {
-                    html += `<div class="barcode-bar" style="width:${barWidth}px; background:white;"></div>`;
-                }
-            }
-            html += '</div>';
-            return html;
-        }
-
         function render() {
-            const listDiv = document.getElementById('pallet-list');
             listDiv.innerHTML = '';
             countSpan.innerText = pallets.length;
             progressBar.style.width = ((worked.length / totalInit) * 100) + '%';
@@ -146,16 +104,21 @@
             pallets.forEach((item, index) => {
                 const card = document.createElement('div');
                 card.className = 'pallet-card';
-                // El diseño pone la location pequeña, el código de barras grande y el LPN texto debajo.
+                
+                // Usamos la API de QRServer para generar el QR al vuelo
+                const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${item.lpn}`;
+                
                 card.innerHTML = `
                     <div class="small-loc">${item.loc}</div>
-                    ${generateBarcodeHtml(item.lpn)}
+                    <div class="qr-box">
+                        <img src="${qrUrl}" alt="QR LPN">
+                    </div>
                     <div class="lpn-text">${item.lpn}</div>
                 `;
-                // Para la prueba en el reloj, tocar el código simula el escaneo.
+                
                 card.onclick = () => {
                     lastDeleted = { data: pallets[index], index: index };
-                    document.getElementById('last-text').innerText = `Scanned: ${item.lpn.substring(item.lpn.length - 4)}`;
+                    document.getElementById('last-text').innerText = `Scanned: ${item.lpn}`;
                     worked.push(item); pallets.splice(index, 1);
                     document.getElementById('undo-btn').style.display = 'block';
                     render();
@@ -169,21 +132,21 @@
                 pallets.splice(lastDeleted.index, 0, lastDeleted.data);
                 worked.pop(); lastDeleted = null;
                 document.getElementById('undo-btn').style.display = 'none';
-                document.getElementById('last-text').innerText = worked.length > 0 ? `Scanned: ${worked[worked.length-1].lpn.substring(worked[worked.length-1].lpn.length - 4)}` : "None";
+                document.getElementById('last-text').innerText = worked.length > 0 ? `Scanned: ${worked[worked.length-1].lpn}` : "None";
                 render();
             }
         }
 
         function generateReport() {
             const canvas = document.getElementById('reportCanvas'); const ctx = canvas.getContext('2d');
-            canvas.width = 500; canvas.height = 130 + (worked.length * 28);
+            canvas.width = 500; canvas.height = 150 + (worked.length * 28);
             ctx.fillStyle = "white"; ctx.fillRect(0,0,500,canvas.height);
-            ctx.fillStyle = "#002d72"; ctx.font = "bold 20px Arial"; ctx.fillText("CYCLE COUNT REPORT", 30, 40);
+            ctx.fillStyle = "#002d72"; ctx.font = "bold 20px Arial"; ctx.fillText("CYCLE COUNT QR REPORT", 30, 40);
             ctx.fillStyle = "black"; ctx.font = "14px Courier";
-            worked.forEach((p, i) => ctx.fillText(`${i+1}. SCANNED: ${p.lpn.padEnd(16)} | LOC: ${p.loc}`, 30, 100 + (i * 28)));
+            worked.forEach((p, i) => ctx.fillText(`${(i+1).toString().padStart(2,'0')}. QR SCANNED: ${p.lpn.padEnd(16)} | LOC: ${p.loc}`, 30, 100 + (i * 28)));
             ctx.fillStyle = "#002d72"; ctx.fillRect(0, canvas.height-60, 500, 60);
             ctx.fillStyle = "white"; ctx.fillText("Completed: " + new Date().toLocaleString(), 30, canvas.height-25);
-            const link = document.createElement('a'); link.download = 'Cycle_Report.png'; link.href = canvas.toDataURL(); link.click();
+            const link = document.createElement('a'); link.download = 'Cycle_QR_Report.png'; link.href = canvas.toDataURL(); link.click();
         }
         render();
     </script>
