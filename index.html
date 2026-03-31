@@ -11,7 +11,6 @@
         }
         body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 100px; overscroll-behavior: none; }
         
-        /* CABECERA AGRUPADA OFICIAL v12 */
         .header { position: sticky; top: 0; background: #111; padding: 12px; border-bottom: 1px solid #333; z-index: 100; }
         .row-1 { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         #undo-btn { background: var(--undo); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 0.8rem; display: none; cursor: pointer; }
@@ -19,19 +18,15 @@
         .progress-container { width: 100%; height: 6px; background: #333; border-radius: 3px; overflow: hidden; }
         #progress-bar { width: 0%; height: 100%; background: var(--success); transition: 0.4s; }
         
-        /* LISTA CON QR */
         .list-container { padding: 10px 5px; display: flex; flex-direction: column; gap: 10px; }
-        
         .pallet-card { 
             background: var(--card); border: 1px solid #333; border-radius: 15px; 
             padding: 15px; text-align: center; 
             display: flex; flex-direction: column; align-items: center;
         }
         .pallet-card:active { background: #333; transform: scale(0.98); }
-
         .small-loc { font-size: 1rem; font-weight: bold; color: var(--warning); margin-bottom: 8px; }
         
-        /* Contenedor del QR */
         .qr-box {
             background: #fff; 
             padding: 10px;
@@ -41,11 +36,10 @@
             align-items: center;
             margin-bottom: 8px;
         }
-        .qr-box img { width: 150px; height: 150px; } /* Tamaño optimizado para escaneo */
+        .qr-box img { width: 150px; height: 150px; }
 
         .lpn-text { font-size: 0.9rem; opacity: 0.6; font-family: monospace; font-weight: bold; }
         
-        /* BOTÓN REPORTE NAVY */
         .footer-btn { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 90%; z-index: 200; }
         #download-btn { width: 100%; padding: 15px; border-radius: 30px; border: none; background: #002d72; color: white; font-weight: bold; display: none; }
     </style>
@@ -70,18 +64,15 @@
     <canvas id="reportCanvas" style="display:none;"></canvas>
 
     <script>
-        // DATOS DE LA HOJA (19 PALLETS)
         const masterList = [
-            { lpn: "LEC00000001ES0", loc: "AY48B002" }, { lpn: "LEC0000000SC2", loc: "AZ50A003" },
-            { lpn: "LEC0000000SCE", loc: "AZ50B002" }, { lpn: "LEC0000000SCA", loc: "AZ50B003" },
-            { lpn: "LEC0000000SC8", loc: "AZ50C003" }, { lpn: "LEC0000000SC6", loc: "AZ50D001" },
-            { lpn: "LEC0000000SC7", loc: "AZ50D003" }, { lpn: "LEC0000000SC4", loc: "BE12B001" },
-            { lpn: "LEC0000000SCD", loc: "BE13C003" }, { lpn: "LEC0000000SCC", loc: "BE13D003" },
-            { lpn: "LEC0000000SC3", loc: "BE17A001" }, { lpn: "LEC0000000SCH", loc: "BE17A003" },
-            { lpn: "LEC0000000SCB", loc: "BE17B002" }, { lpn: "LEC0000000SCG", loc: "BE17C001" },
-            { lpn: "LEC0000000SCF", loc: "BE17C003" }, { lpn: "LEC0000000SC9", loc: "BE17D002" },
-            { lpn: "LEC0000000SC0", loc: "BK40A002" }, { lpn: "LEC0000000SC1", loc: "BK40D001" },
-            { lpn: "LEC0000000SBZ", loc: "BK42D003" }
+            { lpn: "LEC00000000GO", loc: "BD16A003" }, { lpn: "LEC00000000PA", loc: "BD36D002" },
+            { lpn: "LEC00000000NY", loc: "BD36D003" }, { lpn: "LEC00000000OF", loc: "BD38A001" },
+            { lpn: "LEC00000000Q8", loc: "BD38A002" }, { lpn: "LEC00000000Q6", loc: "BD38A003" },
+            { lpn: "LEC00000000PY", loc: "BD38B001" }, { lpn: "LEC00000000PC", loc: "BD38B002" },
+            { lpn: "LEC00000000PX", loc: "BD38B003" }, { lpn: "LEC00000000PH", loc: "BD38C001" },
+            { lpn: "LEC00000000OY", loc: "BD38C002" }, { lpn: "LEC00000000PV", loc: "BD38C003" },
+            { lpn: "LEC00000000O8", loc: "BD38D001" }, { lpn: "LEC00000000O7", loc: "BD38D002" },
+            { lpn: "LEC00000000QE", loc: "BD38D003" }, { lpn: "LEC00000000PS", loc: "BD40A001" }
         ].sort((a, b) => a.loc.localeCompare(b.loc));
 
         let pallets = [...masterList];
@@ -104,10 +95,7 @@
             pallets.forEach((item, index) => {
                 const card = document.createElement('div');
                 card.className = 'pallet-card';
-                
-                // Usamos la API de QRServer para generar el QR al vuelo
                 const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${item.lpn}`;
-                
                 card.innerHTML = `
                     <div class="small-loc">${item.loc}</div>
                     <div class="qr-box">
@@ -115,7 +103,6 @@
                     </div>
                     <div class="lpn-text">${item.lpn}</div>
                 `;
-                
                 card.onclick = () => {
                     lastDeleted = { data: pallets[index], index: index };
                     document.getElementById('last-text').innerText = `Scanned: ${item.lpn}`;
